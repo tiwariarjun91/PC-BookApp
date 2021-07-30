@@ -1,0 +1,16 @@
+//This file contains message definnition of the cpu of the laptop.
+// Tags 19000 to 19999 are reserved for internal protobuf implmentations.
+// download protoc from github releases. Add to system variables.
+// C:\Users\arjun\Desktop\GO_Project\bin // correct path should be goPath/bin. as the .exe for protoc-gen-go is stored in goPath/bin
+//protoc --proto_path=proto proto/*.proto --go_out=plugins=grpc:pb
+syntax = "proto3" ;
+option go_package = ".;pb"; // newer versions require to add go_package where the code will be generated
+
+message CPU {
+    string brand = 1;
+    string name = 2;
+    uint32 number_cores = 3; // number of cores
+    uint32 number_threads = 4; // number of threads 
+    double min_ghz = 5; // minimum frequency
+    double max_ghz = 6; // maximum frequency
+}
