@@ -20,6 +20,7 @@ func NewCPU() *pb.CPU{
 		Name: name,
 		NumberCores: uint32(numberCores),
 		NumberThreads: uint32(numberThreads),
+		
 
 	}
 	return cpu
