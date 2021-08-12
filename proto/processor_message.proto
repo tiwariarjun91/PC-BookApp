@@ -6,7 +6,9 @@
 
 syntax = "proto3" ;
 
-import "memory_message.proto" ;
+//import "memory_message.proto" ;
+
+import "memory_message.proto";
 
 option go_package = ".;pb"; // newer versions require to add go_package where the code will be generated
 
@@ -24,5 +26,5 @@ message GPU {
     string name = 2;
     double min_ghz = 3;
     double max_ghz = 4;
-    Memory menory = 5;
+    Memory memory = 5;
 }

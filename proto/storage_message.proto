@@ -7,7 +7,7 @@ import "memory_message.proto";
 message Storage{
     enum Driver{
         UNKNOWN = 0;
-        SDD = 1;
+        SSD = 1;
         HDD = 2;
     }
 
