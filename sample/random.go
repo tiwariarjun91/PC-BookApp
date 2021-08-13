@@ -4,9 +4,13 @@ import(
 	"math/rand"
 	"github.com/tiwariarjun91/PC-BookApp/pb"
 	"github.com/google/uuid"
-	//"time"
-
+	"time"
 )
+
+func init(){
+	rand.Seed(time.Now().UnixNano()) // rand has a fixed seed if this bit of code were not here random file would generate the same values except the id which is generated because of uuid
+}
+
 func randomKeyBoardLayout() pb.Keyboard_Layout{
 	switch rand.Intn(3){
 	case 1:

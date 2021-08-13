@@ -33,12 +33,12 @@ func TestSerializer(t *testing.T){
 		t.Fatalf("test case failed")
 	}
 
-	jsonFile := "../tmp/laptop.json"
+	/*jsonFile := "../tmp/laptop1.json"
 
 	err = WriteProtobufToJSONFile(laptop1, jsonFile)
 	if err != nil{
 		fmt.Println(err)
 		t.Fatalf("test case failed")
-	}
+	}*/
 }
 
