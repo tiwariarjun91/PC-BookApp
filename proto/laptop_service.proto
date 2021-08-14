@@ -1,0 +1,17 @@
+syntax = "proto3";
+// we are going to use protobuffers for Interface definition language
+option go_package = ".;pb";
+
+import "laptop_message.proto" ;
+
+message CreateLaptopRequest{ //will generate a createlaptoprequest struct
+    Laptop laptop = 1;
+}
+
+message CreateLaptopResponse{ // will generate a createlaptopresponse struct
+    string id = 1;
+}
+
+service LaptopService{ // will generate an implemented client interface and an unimplemented server interface
+    rpc CreateLaptop(CreateLaptopRequest) returns(CreateLaptopResponse) {}; // this method will be implemented in client side struct 
+}
