@@ -29,6 +29,9 @@ func (laptopserver *LaptopServer) CreateLaptop(
 
 		laptop := req.GetLaptop()
 
+		log.Printf("received a create laptop request with id: %s",laptop.Id)
+
+
 		if len(laptop.Id) > 0{ // if the user has sent an Id
 			_,err := uuid.Parse(laptop.Id)
 			if err != nil{
