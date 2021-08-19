@@ -16,6 +16,7 @@ var	ErrAlreadyExists = errors.New("Record already exists") // this type cant be 
 type LaptopStore interface{
 	// save saves the laptop to the store
 	Save(in *pb.Laptop) error
+	Find(Id string) (*pb.Laptop,error)
 }
 
 // InMemoryLaptopStorage stores the laptop in memory
@@ -51,6 +52,27 @@ func (store *InMemoryLaptopStorage) Save(laptop *pb.Laptop) error{
 	return nil
 }
 
+
+func (store *InMemoryLaptopStorage) Find(Id string) (*pb.Laptop,error){
+	store.mutex.RLock()
+	defer store.mutex.RUnlock()
+
+	laptop := store.data[Id]
+
+	if laptop == nil{
+		return nil,nil
+	}
+
+	other := &pb.Laptop{}
+
+	err := copier.Copy(other,laptop)
+	if err != nil{
+		return nil,fmt.Errorf("Cannot copy data %w",err)
+	}
+
+	return other,nil
+
+}
 // DBLaptopStorage stores the laptop to database
 /*type DBLaptopStorage struct{
 
