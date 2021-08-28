@@ -8,6 +8,7 @@ import(
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"errors"
+	"time"
 
 )
 
@@ -45,6 +46,9 @@ func (laptopserver *LaptopServer) CreateLaptop(
 			laptop.Id = id.String()
 		}
 
+
+		// heavy code
+		//time.Sleep(6 * time.Second)
 		err := laptopserver.Store.Save(laptop)
 		code := codes.Internal
 		if errors.Is(err,ErrAlreadyExists){
