@@ -76,6 +76,7 @@ func (laptopServer *LaptopServer) SearchLaptop(
 	log.Printf("received a search laptop request with filter: %v",filter)
 
 	err := laptopServer.Store.Search(
+		stream.Context(),
 		filter,
 		func (laptop *pb.Laptop) error{
 			res := &pb.SearchLaptopResponse{Laptop : laptop}
