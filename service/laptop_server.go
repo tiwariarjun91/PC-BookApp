@@ -8,7 +8,7 @@ import(
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"errors"
-	"time"
+	//"time"
 
 )
 
@@ -66,4 +66,34 @@ func (laptopserver *LaptopServer) CreateLaptop(
 
 		return res,nil
 
+}
+
+func (laptopServer *LaptopServer) SearchLaptop(
+	req *pb.SearchLaptopRequest, 
+	stream pb.LaptopService_SearchLaptopServer,
+) error{
+	filter := req.GetFilter()
+	log.Printf("received a search laptop request with filter: %v",filter)
+
+	err := laptopServer.Store.Search(
+		filter,
+		func (laptop *pb.Laptop) error{
+			res := &pb.SearchLaptopResponse{Laptop : laptop}
+
+			err := stream.Send(res)
+
+			if err != nil{
+				return err
+			}
+
+			log.Printf("sent laptop with id: %s",laptop.GetId())
+			return nil
+		},
+	)
+
+	if err != nil{
+		return status.Errorf(codes.Internal, "Unexpected error: %v",err)
+	}
+
+	return nil
 }
