@@ -21,7 +21,27 @@ message SearchLaptopResponse{
     Laptop laptop = 1;
 }
 
+message UploadImageRequest{
+    oneof data{
+        ImageInfo info = 1;
+        bytes chunk_data = 2;
+    }
+
+}
+
+message ImageInfo{
+    string laptop_id = 1;
+    string image_type = 2;
+}
+
+message UploadImageResponse{
+    string id = 1;
+    uint32 size = 2;
+
+}
+
 service LaptopService{ // will generate an implemented client interface and an unimplemented server interface
     rpc CreateLaptop(CreateLaptopRequest) returns(CreateLaptopResponse) {};//Unary grpc call // this method will be implemented in client side struct 
     rpc SearchLaptop(SearchLaptopRequest) returns(stream SearchLaptopResponse) {}; // server side streaming call
+    rpc UploadImage(stream UploadImageRequest) returns(UploadImageResponse) {};
 }

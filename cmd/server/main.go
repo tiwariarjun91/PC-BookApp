@@ -33,4 +33,5 @@ func main(){
 	if err != nil{
 		log.Fatal("Cannot Start Server ",err)
 	}
+	// http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){ }) // returns a handler for this wrapped function
 }
