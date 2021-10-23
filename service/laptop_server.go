@@ -14,12 +14,16 @@ import(
 
 // LaptopServer is a struct that provides laptop services
 type LaptopServer struct{
-	Store LaptopStore //interface object
+	laptopStore LaptopStore //interface object
+	imageStore ImageStore
 }
 
 // Returns a new LaptopServer struct instance
-func NewLaptopServer(store LaptopStore) *LaptopServer{
-	return &LaptopServer{store}
+func NewLaptopServer(laptop LaptopStore, image ImageStore) *LaptopServer{
+	return &LaptopServer{
+		laptopStore : laptop,
+		imageStore : image,
+	}
 }
 
 //CreateLaptop is a unary rpc to create a new laptop
@@ -49,7 +53,7 @@ func (laptopserver *LaptopServer) CreateLaptop(
 
 		// heavy code
 		//time.Sleep(6 * time.Second)
-		err := laptopserver.Store.Save(laptop)
+		err := laptopserver.laptopStore.Save(laptop)
 		code := codes.Internal
 		if errors.Is(err,ErrAlreadyExists){
 			code = codes.AlreadyExists // codes. not code.
@@ -75,7 +79,7 @@ func (laptopServer *LaptopServer) SearchLaptop(
 	filter := req.GetFilter()
 	log.Printf("received a search laptop request with filter: %v",filter)
 
-	err := laptopServer.Store.Search(
+	err := laptopServer.laptopStore.Search(
 		stream.Context(),
 		filter,
 		func (laptop *pb.Laptop) error{
@@ -95,6 +99,11 @@ func (laptopServer *LaptopServer) SearchLaptop(
 	if err != nil{
 		return status.Errorf(codes.Internal, "Unexpected error: %v",err)
 	}
+
+	return nil
+}
+
+func (laptopServer *LaptopServer) UploadImage(stream pb.LaptopService_UploadImageServer) error{
 
 	return nil
 }
