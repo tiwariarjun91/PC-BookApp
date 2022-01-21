@@ -11,6 +11,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"time"
 	"io"
+	"os"
+	"path/filepath"
 
 
 )
@@ -73,6 +75,71 @@ func searchLaptop(laptopClient pb.LaptopServiceClient, filter *pb.Filter){
 	}
 }
 
+func uploadImage(laptopClient pb.LaptopServiceClient )  {
+	laptop := sample.NewLaptop()
+	req := &pb.CreateLaptopRequest{
+		Laptop : laptop,
+	}
+	_,err := laptopClient.CreateLaptop(ctx,req)
+	if err != nil{
+		st,ok := status.FromError(err)
+		if ok && st.Code() == codes.AlreadyExists {
+			log.Print("Laptop already exists")
+		} else{
+			log.Fatalf("Cannot create laptop: ",err)
+		}
+		return
+	}
+
+	log.Printf("Created Laptop with Id : %s",res.Id)
+
+	file, err := os.Open("tmp/download.png")
+	if err != nil{
+		log.Printf("Cannot open the file, %s", err)
+		return 
+	}
+
+	defer file.Close()
+
+	ctx, cancel := Context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	stream, err := laptopClient.UploadImage(ctx)
+	if err != nil(
+		log.Printf("Cannot create the stream %s", err)
+		return 
+	)
+
+	req := &pb.UploadImageRequest{
+		Data : pb.UploadImageRequest_Info{
+			Info: &pb.ImageInfo{
+				LaptopId : laptop.Id,
+				ImageType : filepath.Ext("tmp/download.png"),
+			},
+		},
+
+	}
+
+	err = stream.Send(req)
+	if err != nil{
+		log.Printf("Error sending image info with the stream %s", err)
+		
+	}
+
+	reader := bufio.NewReader(file)
+	buffer := make([]byte, 1024)
+
+	for{
+		n, err := reader.read(buffer)
+		if err == io.EOF{
+			break
+		}
+
+		
+	}
+
+	
+}
 
 func main(){
 	serverAddress := flag.String("address","","The server address") // go run main.go --address "actual address"
@@ -80,6 +147,7 @@ func main(){
 	log.Printf("dial server %s",*serverAddress)
 
 	conn,err := grpc.Dial(*serverAddress,grpc.WithInsecure())
+	defer conn.Close()
 	if err != nil{
 		log.Fatalf("Cannot dial server : ",err)
 	}
